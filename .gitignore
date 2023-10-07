@@ -5,3 +5,4 @@ config.json
 DiscordDeeply/.DS_Store
 /.idea/*
 discord.log
+**/__pycache__/*
