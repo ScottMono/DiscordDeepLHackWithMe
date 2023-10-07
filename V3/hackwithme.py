@@ -18,21 +18,21 @@ BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 
 # create a translator instance
 translator = deepl.Translator(AUTH_KEY)
-# event for when the bot is ready
 
 # This example requires the 'message_content' intent.
-
 intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
 
 
+# on_ready event override
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
 
 
+# on_message event override
 @client.event
 async def on_message(message):
     if message.author == client.user:
@@ -43,18 +43,21 @@ async def on_message(message):
         translated = translate_message("hello", "DE")
         await message.channel.send(translated)
 
+    # substring from the end of $translate and translate that
     if message.content.startswith('$translate'):
         print('in translate')
         translated = translate_message(message.content[10:], "DE")
         await message.channel.send(translated)
 
 
+# on_reaction_add override.
 @client.event
 async def on_reaction_add(reaction, user):
     emoji = reaction.emoji
     await translate_emoji_flag(emoji, reaction)
 
 
+# Translate to the the language of the flag
 async def translate_emoji_flag(emoji, reaction):
     if emoji is not None:
         translated_message = None
@@ -125,13 +128,12 @@ async def translate_emoji_flag(emoji, reaction):
                 return
 
         if translated_message is not None:
+            # create a thread from the reacted message and then send the translated message to this thread
             translation_thread_to_message = await reaction.message.create_thread(name='Translated via reaction', auto_archive_duration=60, slowmode_delay=None, reason='Translation trigger by reaction')
             await translation_thread_to_message.send(content=translated_message)
 
 
 # translate a message
-
-
 def translate_message(message, target_language):
     return translator.translate_text(message.content, target_lang=target_language)
 
