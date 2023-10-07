@@ -57,8 +57,6 @@ async def on_message(message):
 
 
 # translate a message
-
-
 def translate_message(message, target_language):
     return translator.translate_text(message, target_lang=target_language)
 
