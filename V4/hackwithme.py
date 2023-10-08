@@ -52,3 +52,11 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 
 x = DeeplyBot()
 x.run(token=BOT_TOKEN, log_handler=handler, log_level=logging.DEBUG)
+
+
+
+
+docker run -it --name discord-bot --rm \
+    --volume $(pwd):/usr/src/app \
+    --net=host discord-bot-dev:latest \
+    sh
